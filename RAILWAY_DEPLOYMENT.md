@@ -33,16 +33,21 @@ git push origin main
 
 ## Step 3: Configure Service Settings
 
+**Note:** The `nixpacks.toml` file is already configured! Railway will automatically use it.
+
 ### Root Directory
 In Railway service settings:
 - Set **Root Directory** to: `kimkles_api` (or the subdirectory path where your `package.json` is)
 
-### Build Command
+### Build & Start Commands
+Railway will auto-detect from `nixpacks.toml`, but if you need to set manually:
+
+**Build Command:**
 ```bash
 npm install && npm run build && cd server && npm install
 ```
 
-### Start Command
+**Start Command:**
 ```bash
 cd server && npm start
 ```
