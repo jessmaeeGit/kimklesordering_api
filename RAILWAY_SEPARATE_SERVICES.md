@@ -58,10 +58,12 @@ kimkles_api/
 3. **Configure Service Settings:**
    - **Service Name:** `kimkles-frontend` (or your preferred name)
    - **Root Directory:** `/` (root of repository)
-   - **Build Command:** `CI=false npm run build` (or leave empty if `nixpacks.toml` is detected)
+   - **Build Command:** `npm install --legacy-peer-deps && CI=false npm run build` (or leave empty if `nixpacks.toml` is detected)
    - **Start Command:** `npm run serve` (or leave empty if `nixpacks.toml` is detected)
    
-   **Note:** If Railway doesn't detect `nixpacks.toml`, explicitly set the build and start commands above.
+   **Important:** 
+   - If Railway runs `npm ci` and fails, explicitly set the Build Command above to use `npm install` instead
+   - If Railway doesn't detect `nixpacks.toml`, explicitly set the build and start commands above
 
 4. **Add Environment Variables:**
    ```
@@ -197,7 +199,7 @@ cmd = "npx serve -s build -l $PORT"
 - **Solution:**
   1. **Explicitly set in Railway Dashboard:**
      - Go to Frontend Service → **Settings** → **Build**
-     - Set **Build Command:** `CI=false npm run build`
+     - Set **Build Command:** `npm install --legacy-peer-deps && CI=false npm run build`
      - Set **Start Command:** `npm run serve`
   2. **Verify `nixpacks.toml` is in root:**
      - File should be at: `/nixpacks.toml` (root of repository)
@@ -211,6 +213,24 @@ cmd = "npx serve -s build -l $PORT"
   4. **Verify `serve` is installed:**
      - Check `devDependencies` includes `"serve": "^14.2.0"`
      - Or install globally in build phase
+
+### npm ci Error - Package Lock File Out of Sync
+- **Issue:** `npm ci` fails with "package.json and package-lock.json are not in sync"
+- **Solution:**
+  1. **Update package-lock.json locally:**
+     ```bash
+     npm install
+     git add package-lock.json
+     git commit -m "Update package-lock.json"
+     git push origin main
+     ```
+  2. **Or bypass npm ci in Railway:**
+     - Go to Frontend Service → **Settings** → **Build**
+     - Set **Build Command:** `npm install --legacy-peer-deps && CI=false npm run build`
+     - This uses `npm install` instead of `npm ci`
+  3. **Verify all dependencies are in package.json:**
+     - Make sure `serve` is in `devDependencies`
+     - Run `npm install` locally to ensure lock file is updated
 
 ### Environment Variables Not Working
 - **Frontend:** `REACT_APP_*` variables must be set BEFORE build
