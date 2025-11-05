@@ -95,6 +95,30 @@ const FormGroup = styled.div`
     }
   }
   
+  select {
+    background-color: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238B4513' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2.5rem;
+    
+    &:disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    
+    option {
+      padding: 0.5rem;
+      
+      &:disabled {
+        color: #999;
+      }
+    }
+  }
+  
   textarea {
     resize: vertical;
     min-height: 80px;
@@ -120,35 +144,6 @@ const Row = styled.div`
   }
 `;
 
-const RadioGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-`;
-
-const RadioLabel = styled.label`
-  display: flex;
-  align-items: center;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  padding: 0.75rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-  opacity: ${props => props.disabled ? 0.6 : 1};
-  
-  &:hover {
-    background-color: ${props => props.disabled ? 'transparent' : '#f8f9fa'};
-  }
-  
-  input[type="radio"] {
-    margin-right: 0.75rem;
-    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  }
-  
-  span {
-    font-weight: ${props => props.disabled ? 'normal' : '500'};
-  }
-`;
 
 const OrderSummary = styled.div`
   background: #FFF8F0;
@@ -906,32 +901,17 @@ const Checkout = () => {
               <SectionTitle>Payment Method</SectionTitle>
               
               <FormGroup>
-                <RadioGroup>
-                  <RadioLabel htmlFor="paypal">
-                    <input 
-                      type="radio" 
-                      id="paypal" 
-                      name="paymentMethod" 
-                      value="paypal" 
-                      checked={formData.paymentMethod === 'paypal'}
-                      onChange={handleChange}
-                    />
-                    <span>PayPal</span>
-                  </RadioLabel>
-                  
-                  <RadioLabel htmlFor="creditCard" disabled>
-                    <input 
-                      type="radio" 
-                      id="creditCard" 
-                      name="paymentMethod" 
-                      value="creditCard" 
-                      checked={formData.paymentMethod === 'creditCard'}
-                      onChange={handleChange}
-                      disabled
-                    />
-                    <span>Credit/Debit Card (Coming Soon)</span>
-                  </RadioLabel>
-                </RadioGroup>
+                <label htmlFor="paymentMethod">Select Payment Method *</label>
+                <select
+                  id="paymentMethod"
+                  name="paymentMethod"
+                  value={formData.paymentMethod}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="paypal">PayPal</option>
+                  <option value="creditCard" disabled>Credit/Debit Card (Coming Soon)</option>
+                </select>
               </FormGroup>
               
               {formData.paymentMethod === 'paypal' && (
