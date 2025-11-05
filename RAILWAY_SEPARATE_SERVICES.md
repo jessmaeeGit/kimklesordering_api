@@ -199,6 +199,19 @@ cmd = "npx serve -s build -l $PORT"
 - **Frontend:** Check root `nixpacks.toml` is correct
 - **Both:** Check logs in Railway dashboard
 
+### Module Not Found: react-is
+- **Issue:** `Error: Can't resolve 'react-is' in '/app/node_modules/recharts/es6/util'`
+- **Solution:**
+  1. `react-is` is a peer dependency of `recharts` that needs to be explicitly installed
+  2. Install it locally: `npm install react-is`
+  3. Commit `package.json` and `package-lock.json`:
+     ```bash
+     git add package.json package-lock.json
+     git commit -m "Add react-is dependency for recharts"
+     git push origin main
+     ```
+  4. Railway will redeploy with the updated dependencies
+
 ### Frontend Build/Start Commands Not Working
 - **Issue:** Railway not detecting `nixpacks.toml` or commands not executing
 - **Solution:**
