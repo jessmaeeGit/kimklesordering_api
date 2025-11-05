@@ -292,9 +292,37 @@ When you push changes to your main branch:
 
 ## Troubleshooting
 
+### Build Fails - npm ci Error
+
+**Issue:** `npm ci` fails with "package.json and package-lock.json are not in sync" or "Missing: yaml@x.x.x from lock file"
+
+**Solution:**
+1. **Regenerate package-lock.json:**
+   ```bash
+   rm package-lock.json
+   npm install
+   git add package-lock.json
+   git commit -m "Update package-lock.json"
+   git push origin main
+   ```
+
+2. **Use nixpacks.toml:** A `nixpacks.toml` file has been created to control the build process. Make sure it's committed:
+   ```bash
+   git add nixpacks.toml
+   git commit -m "Add nixpacks configuration"
+   git push origin main
+   ```
+
+3. **Alternative:** In Railway dashboard → Settings → Build, set Build Command to:
+   ```bash
+   npm install && cd server && npm install && cd .. && npm run build
+   ```
+
+See **[RAILWAY_FIX_NPM_CI.md](../RAILWAY_FIX_NPM_CI.md)** for detailed fix instructions.
+
 ### Build Fails
 
-**Issue:** Build command fails
+**Issue:** Build command fails (other errors)
 
 **Solution:**
 1. Check build logs in Railway dashboard

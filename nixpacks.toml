@@ -1,0 +1,15 @@
+[providers]
+node = "20"
+
+[phases.install]
+cmds = [
+  "npm install --legacy-peer-deps",
+  "cd server && npm install --legacy-peer-deps && cd .."
+]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm run server"
+
