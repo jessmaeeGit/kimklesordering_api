@@ -63,7 +63,54 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 ### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+This project supports deployment to multiple platforms:
+
+#### 🚂 Railway Deployment (Recommended - Easiest)
+
+Railway is the simplest way to deploy - no server management needed!
+
+- 📖 **[Full Railway Guide](RAILWAY_DEPLOYMENT.md)** - Complete step-by-step instructions
+- ⚡ **[Railway Quick Start](RAILWAY_QUICK_START.md)** - Deploy in minutes
+
+**Railway Benefits:**
+- ✅ No server management
+- ✅ Automatic SSL certificates
+- ✅ Git-based deployments
+- ✅ Built-in monitoring
+- ✅ Free tier available
+
+**Railway Files:**
+- `railway.json` - Railway configuration file
+
+#### 🐳 Digital Ocean Deployment
+
+For full control over your server:
+
+- 📖 **[Full Deployment Guide](DEPLOYMENT.md)** - Complete step-by-step instructions
+- ⚡ **[Quick Start Guide](QUICK_START.md)** - Condensed version for quick reference
+
+**Digital Ocean Files:**
+- `ecosystem.config.js` - PM2 process manager configuration
+- `deploy.sh` - Automated deployment script
+- `nginx.conf.example` - Nginx reverse proxy configuration template
+
+#### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+- `NODE_ENV=production`
+- `PORT=5000` or `SERVER_PORT=5000`
+- `NOTIFICATIONAPI_CLIENT_ID`
+- `NOTIFICATIONAPI_CLIENT_SECRET`
+- `MOVIDER_APIKEY`
+- `MOVIDER_APISECRET`
+- `REACT_APP_PAYPAL_CLIENT_ID`
+- `REACT_APP_API_BASE` (your production URL)
+- `REACT_APP_GEOAPIFY_KEY`
+
+**For Railway:** Set these in the Railway dashboard under Variables tab.
+**For Digital Ocean:** Create a `.env` file on your server.
+
+See the respective deployment guides for detailed instructions.
 
 ### `npm run build` fails to minify
 
