@@ -69,8 +69,9 @@ This project supports deployment to multiple platforms:
 
 Railway is the simplest way to deploy - no server management needed!
 
-- 📖 **[Full Railway Guide](RAILWAY_DEPLOYMENT.md)** - Complete step-by-step instructions
-- ⚡ **[Railway Quick Start](RAILWAY_QUICK_START.md)** - Deploy in minutes
+**Separate Services Setup (Recommended):**
+- 📖 **[Separate Services Guide](RAILWAY_SEPARATE_SERVICES.md)** - Deploy API and Frontend separately
+- Deploys as **two separate services** for better scaling and independent deployments
 
 **Railway Benefits:**
 - ✅ No server management
@@ -78,9 +79,11 @@ Railway is the simplest way to deploy - no server management needed!
 - ✅ Git-based deployments
 - ✅ Built-in monitoring
 - ✅ Free tier available
+- ✅ Independent scaling for API and Frontend
 
 **Railway Files:**
-- `railway.json` - Railway configuration file
+- `nixpacks.toml` - Frontend service configuration
+- `server/nixpacks.toml` - API server service configuration
 
 #### 🐳 Digital Ocean Deployment
 

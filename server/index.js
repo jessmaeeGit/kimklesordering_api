@@ -17,7 +17,7 @@ const PORT = process.env.SERVER_PORT || process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? true : ['http://localhost:3000'],
+  origin: process.env.FRONTEND_URL || process.env.CLIENT_URL || (process.env.NODE_ENV === 'production' ? '*' : ['http://localhost:3000']),
   credentials: true
 }));
 app.use(express.json());
@@ -629,36 +629,13 @@ app.post('/api/notify-order-completion', async (req, res) => {
   }
 });
 
-// Serve static files from React app in production
-if (process.env.NODE_ENV === 'production') {
-  const buildPath = join(__dirname, '..', 'build');
-  console.log('📦 Serving static files from:', buildPath);
-  
-  // Serve static files (CSS, JS, images, etc.)
-  app.use(express.static(buildPath, {
-    maxAge: '1y', // Cache static assets for 1 year
-    etag: true
-  }));
-  
-  // Handle React routing - return all non-API requests to React app
-  // This must be last, after all other routes
-  app.get('*', (req, res) => {
-    // Don't serve React app for API routes
-    if (!req.path.startsWith('/api')) {
-      res.sendFile(join(buildPath, 'index.html'));
-    } else {
-      res.status(404).json({ error: 'API endpoint not found' });
-    }
-  });
-  console.log('🌐 Production mode: React app will be served');
-}
+// API-only server - React app is served separately
+// Static file serving has been removed for separate deployment
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 API Server running on http://localhost:${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
-  if (process.env.NODE_ENV === 'production') {
-    console.log(`🌐 Production mode: Serving React app from /build`);
-  }
+  console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL || process.env.CLIENT_URL || 'all origins'}`);
 });
 

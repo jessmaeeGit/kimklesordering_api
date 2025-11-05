@@ -1,0 +1,9 @@
+[phases.install]
+cmds = ["npm install --legacy-peer-deps"]
+
+[phases.build]
+cmds = []  # No build needed for API server
+
+[start]
+cmd = "npm start"
+
