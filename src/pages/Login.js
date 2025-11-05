@@ -9,19 +9,40 @@ import { loginAdmin, selectAdminAccounts } from '../features/admin/adminSlice';
 const LoginContainer = styled.div`
   max-width: 500px;
   margin: 0 auto;
+  padding: 2rem 5%;
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  @media (max-width: 576px) {
+    padding: 1rem;
+  }
 `;
 
 const LoginCard = styled.div`
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+  padding: 2.5rem;
+  width: 100%;
+  
+  @media (max-width: 576px) {
+    padding: 1.5rem;
+  }
 `;
 
 const Title = styled.h1`
   color: #8B4513;
   text-align: center;
   margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  
+  @media (max-width: 576px) {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const FormGroup = styled.div`
@@ -32,6 +53,7 @@ const FormGroup = styled.div`
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #555;
+    font-size: 0.95rem;
   }
   
   input {
@@ -40,20 +62,29 @@ const FormGroup = styled.div`
     border: 1px solid #DDD;
     border-radius: 4px;
     font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
     
     &:focus {
       outline: none;
       border-color: #8B4513;
       box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
     }
+    
+    &::placeholder {
+      color: #999;
+    }
   }
 `;
 
 const InputWrapper = styled.div`
   position: relative;
+  width: 100%;
   
   input {
     padding-left: 2.5rem;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   svg {
@@ -62,6 +93,8 @@ const InputWrapper = styled.div`
     top: 50%;
     transform: translateY(-50%);
     color: #999;
+    z-index: 1;
+    pointer-events: none;
   }
 `;
 
@@ -85,6 +118,17 @@ const LoginButton = styled.button`
     background: #CCCCCC;
     cursor: not-allowed;
   }
+`;
+
+const ErrorMessage = styled.div`
+  background: #FFEBEE;
+  color: #C62828;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
 `;
 
 const RegisterLink = styled.div`
@@ -230,18 +274,7 @@ const Login = () => {
       <LoginCard>
         <Title>Login</Title>
         
-        {error && (
-          <div style={{
-            background: '#FFEBEE',
-            color: '#C62828',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-            textAlign: 'center'
-          }}>
-            {error}
-          </div>
-        )}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         
         <form onSubmit={handleSubmit}>
           <FormGroup>
@@ -254,7 +287,9 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                placeholder="Enter your email address"
                 required
+                autoComplete="email"
               />
             </InputWrapper>
           </FormGroup>
@@ -269,7 +304,9 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                placeholder="Enter your password"
                 required
+                autoComplete="current-password"
               />
             </InputWrapper>
           </FormGroup>

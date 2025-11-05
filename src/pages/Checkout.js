@@ -11,6 +11,22 @@ const CheckoutContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 5%;
+  
+  h1 {
+    color: #8B4513;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    text-align: center;
+    
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    padding: 1rem;
+  }
 `;
 
 const CheckoutGrid = styled.div`
@@ -28,6 +44,16 @@ const CheckoutSection = styled.section`
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  @media (max-width: 576px) {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -46,6 +72,7 @@ const FormGroup = styled.div`
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #555;
+    font-size: 0.95rem;
   }
   
   input, select, textarea {
@@ -54,12 +81,32 @@ const FormGroup = styled.div`
     border: 1px solid #DDD;
     border-radius: 4px;
     font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
     
     &:focus {
       outline: none;
       border-color: #8B4513;
       box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
     }
+    
+    &::placeholder {
+      color: #999;
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+  }
+  
+  small {
+    display: block;
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.85rem;
+    line-height: 1.4;
   }
 `;
 
@@ -70,6 +117,36 @@ const Row = styled.div`
   
   @media (max-width: 576px) {
     grid-template-columns: 1fr;
+  }
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+`;
+
+const RadioLabel = styled.label`
+  display: flex;
+  align-items: center;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  padding: 0.75rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  opacity: ${props => props.disabled ? 0.6 : 1};
+  
+  &:hover {
+    background-color: ${props => props.disabled ? 'transparent' : '#f8f9fa'};
+  }
+  
+  input[type="radio"] {
+    margin-right: 0.75rem;
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  }
+  
+  span {
+    font-weight: ${props => props.disabled ? 'normal' : '500'};
   }
 `;
 
@@ -680,21 +757,21 @@ const Checkout = () => {
         <CheckoutGrid>
           <div>
             <CheckoutSection>
-              <SectionTitle>Delivery Form</SectionTitle>
+              <SectionTitle>Delivery Information</SectionTitle>
               
-              <Row>
-                <FormGroup>
-                  <label htmlFor="fullName">Full Name *</label>
-                  <input 
-                    type="text" 
-                    id="fullNamee" 
-                    name="fullName" 
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    required 
-                  />
-                </FormGroup>
-              </Row>
+              <FormGroup>
+                <label htmlFor="fullName">Full Name *</label>
+                <input 
+                  type="text" 
+                  id="fullName" 
+                  name="fullName" 
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                  required 
+                />
+              </FormGroup>
+              
               <FormGroup>
                 <label htmlFor="email">Email Address *</label>
                 <input 
@@ -703,6 +780,7 @@ const Checkout = () => {
                   name="email" 
                   value={formData.email}
                   onChange={handleChange}
+                  placeholder="your.email@example.com"
                   required 
                 />
               </FormGroup>
@@ -718,7 +796,7 @@ const Checkout = () => {
                   placeholder="09XXXXXXXXX or +639XXXXXXXXX"
                   required 
                 />
-                <small style={{ color: '#666', fontSize: '0.85rem' }}>
+                <small>
                   Format: 09XXXXXXXXX or +639XXXXXXXXX (Philippine numbers)
                 </small>
               </FormGroup>
@@ -816,44 +894,44 @@ const Checkout = () => {
                 <textarea 
                   id="deliveryInstructions" 
                   name="deliveryInstructions" 
-                  rows="3"
+                  rows="4"
                   value={formData.deliveryInstructions}
                   onChange={handleChange}
-                  placeholder="Special instructions for delivery"
+                  placeholder="e.g., Leave at the gate, Call upon arrival, etc."
                 ></textarea>
               </FormGroup>
             </CheckoutSection>
             
-            <CheckoutSection style={{ marginTop: '2rem' }}>
+            <CheckoutSection>
               <SectionTitle>Payment Method</SectionTitle>
               
               <FormGroup>
-                <div style={{ marginBottom: '1rem' }}>
-                  <input 
-                    type="radio" 
-                    id="paypal" 
-                    name="paymentMethod" 
-                    value="paypal" 
-                    checked={formData.paymentMethod === 'paypal'}
-                    onChange={handleChange}
-                  />
-                  <label htmlFor="paypal" style={{ marginLeft: '0.5rem' }}>PayPal</label>
-                </div>
-                
-                <div>
-                  <input 
-                    type="radio" 
-                    id="creditCard" 
-                    name="paymentMethod" 
-                    value="creditCard" 
-                    checked={formData.paymentMethod === 'creditCard'}
-                    onChange={handleChange}
-                    disabled
-                  />
-                  <label htmlFor="creditCard" style={{ marginLeft: '0.5rem', opacity: 0.6 }}>
-                    Credit/Debit Card (Coming Soon)
-                  </label>
-                </div>
+                <RadioGroup>
+                  <RadioLabel htmlFor="paypal">
+                    <input 
+                      type="radio" 
+                      id="paypal" 
+                      name="paymentMethod" 
+                      value="paypal" 
+                      checked={formData.paymentMethod === 'paypal'}
+                      onChange={handleChange}
+                    />
+                    <span>PayPal</span>
+                  </RadioLabel>
+                  
+                  <RadioLabel htmlFor="creditCard" disabled>
+                    <input 
+                      type="radio" 
+                      id="creditCard" 
+                      name="paymentMethod" 
+                      value="creditCard" 
+                      checked={formData.paymentMethod === 'creditCard'}
+                      onChange={handleChange}
+                      disabled
+                    />
+                    <span>Credit/Debit Card (Coming Soon)</span>
+                  </RadioLabel>
+                </RadioGroup>
               </FormGroup>
               
               {formData.paymentMethod === 'paypal' && (

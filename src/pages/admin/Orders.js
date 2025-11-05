@@ -184,9 +184,55 @@ const Orders = () => {
   });
 
   // Handle order approval
-  const handleApproveOrder = (orderId) => {
-    if (window.confirm('Are you sure you want to approve this order?')) {
+  const handleApproveOrder = async (orderId) => {
+    if (window.confirm('Are you sure you want to approve this order? This will notify the customer that their order has been received and is being processed.')) {
+      // Find the order data
+      const order = orders.find(o => o.id === orderId);
+      
+      if (!order) {
+        alert('Order not found');
+        return;
+      }
+
+      // Dispatch the approval action
       dispatch(approveOrder(orderId));
+
+      // Send notification to customer that order is received
+      if (order.customerEmail) {
+        try {
+          const API_URL = process.env.REACT_APP_API_BASE || 'http://localhost:5000';
+          
+          const response = await fetch(`${API_URL}/api/notify-order`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              orderId: order.id,
+              amount: order.total || order.amount || 0,
+              customerEmail: order.customerEmail,
+              customerName: order.customerName || order.customerEmail.split('@')[0],
+              customerPhone: order.customerPhone || order.phone || '',
+              items: order.items || [],
+            }),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            console.log('✅ Order received notification sent:', result);
+            alert('Order approved! Customer has been notified via email and SMS that their order has been received.');
+          } else {
+            const error = await response.json();
+            console.error('❌ Failed to send order received notification:', error);
+            alert('Order approved, but failed to send notification email. Please notify the customer manually.');
+          }
+        } catch (error) {
+          console.error('Error sending order received notification:', error);
+          alert('Order approved, but failed to send notification email. Please notify the customer manually.');
+        }
+      } else {
+        alert('Order approved! (No customer email available for notification)');
+      }
     }
   };
 
