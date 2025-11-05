@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { FaSignOutAlt, FaTachometerAlt, FaBox, FaShoppingBag, FaUsers, FaCreditCard, FaTags, FaBars, FaTimes } from 'react-icons/fa';
 import { logoutAdmin, setCurrentAdmin, selectCurrentAdmin } from '../../features/admin/adminSlice';
-import Navbar from '../../components/Navbar';
 
 const AdminContainer = styled.div`
   display: flex;
@@ -295,7 +294,6 @@ const AdminLayout = () => {
 
   return (
     <>
-      <Navbar />
       <AdminContainer>
         <Sidebar isOpen={isSidebarOpen}>
           <SidebarHeader>

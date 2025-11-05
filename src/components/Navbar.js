@@ -167,10 +167,15 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   const checkAuth = () => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const userData = localStorage.getItem('user');
+    
+    // Check if admin is logged in
+    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    setIsAdminLoggedIn(adminLoggedIn);
     
     setIsLoggedIn(loggedIn);
     if (userData) {
@@ -197,10 +202,12 @@ const Navbar = () => {
     
     // Also listen for custom event when login/logout happens in same tab
     window.addEventListener('authChange', handleStorageChange);
+    window.addEventListener('adminLogout', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('authChange', handleStorageChange);
+      window.removeEventListener('adminLogout', handleStorageChange);
     };
   }, []);
 
@@ -216,6 +223,11 @@ const Navbar = () => {
     
     navigate('/');
   };
+
+  // Don't render navbar if admin is logged in
+  if (isAdminLoggedIn) {
+    return null;
+  }
 
   return (
     <Nav>
