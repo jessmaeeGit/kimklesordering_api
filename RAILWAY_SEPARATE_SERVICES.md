@@ -58,12 +58,17 @@ kimkles_api/
 3. **Configure Service Settings:**
    - **Service Name:** `kimkles-frontend` (or your preferred name)
    - **Root Directory:** `/` (root of repository)
-   - **Build Command:** `npm install --legacy-peer-deps && CI=false npm run build` (or leave empty if `nixpacks.toml` is detected)
-   - **Start Command:** `npm run serve` (or leave empty if `nixpacks.toml` is detected)
+   - **Build Command:** `npm install --legacy-peer-deps && CI=false npm run build`
+   - **Start Command:** `npm run serve`
    
-   **Important:** 
-   - If Railway runs `npm ci` and fails, explicitly set the Build Command above to use `npm install` instead
-   - If Railway doesn't detect `nixpacks.toml`, explicitly set the build and start commands above
+   **⚠️ CRITICAL - READ THIS:**
+   - **MUST set Build Command explicitly** in Railway dashboard
+   - Railway runs `npm ci` AUTOMATICALLY before detecting `nixpacks.toml`
+   - This causes lock file sync errors (like missing `yaml@2.8.1`)
+   - Setting Build Command explicitly overrides `npm ci` and uses `npm install` instead
+   - **DO NOT rely on `nixpacks.toml`** - it's detected AFTER `npm ci` runs
+   
+   **See [RAILWAY_QUICK_FIX.md](RAILWAY_QUICK_FIX.md) for detailed fix instructions.**
 
 4. **Add Environment Variables:**
    ```
@@ -215,22 +220,27 @@ cmd = "npx serve -s build -l $PORT"
      - Or install globally in build phase
 
 ### npm ci Error - Package Lock File Out of Sync
-- **Issue:** `npm ci` fails with "package.json and package-lock.json are not in sync"
-- **Solution:**
-  1. **Update package-lock.json locally:**
+- **Issue:** `npm ci` fails with "package.json and package-lock.json are not in sync" or "Missing: yaml@2.8.1 from lock file"
+- **Solution (RECOMMENDED):**
+  1. **Bypass npm ci in Railway Dashboard:**
+     - Go to Frontend Service → **Settings** → **Build**
+     - Set **Build Command:** `npm install --legacy-peer-deps && CI=false npm run build`
+     - Set **Start Command:** `npm run serve`
+     - Save and redeploy
+     - This uses `npm install` instead of `npm ci`, avoiding sync issues
+  2. **Alternative - Update package-lock.json:**
      ```bash
+     rm package-lock.json
      npm install
      git add package-lock.json
      git commit -m "Update package-lock.json"
      git push origin main
      ```
-  2. **Or bypass npm ci in Railway:**
-     - Go to Frontend Service → **Settings** → **Build**
-     - Set **Build Command:** `npm install --legacy-peer-deps && CI=false npm run build`
-     - This uses `npm install` instead of `npm ci`
   3. **Verify all dependencies are in package.json:**
      - Make sure `serve` is in `devDependencies`
      - Run `npm install` locally to ensure lock file is updated
+
+**Note:** Railway runs `npm ci` automatically before detecting `nixpacks.toml`. Setting Build Command explicitly prevents this.
 
 ### Environment Variables Not Working
 - **Frontend:** `REACT_APP_*` variables must be set BEFORE build
