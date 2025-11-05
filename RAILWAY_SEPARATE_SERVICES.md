@@ -58,8 +58,10 @@ kimkles_api/
 3. **Configure Service Settings:**
    - **Service Name:** `kimkles-frontend` (or your preferred name)
    - **Root Directory:** `/` (root of repository)
-   - **Build Command:** (leave empty - handled by root `nixpacks.toml`)
-   - **Start Command:** (leave empty - handled by root `nixpacks.toml`)
+   - **Build Command:** `CI=false npm run build` (or leave empty if `nixpacks.toml` is detected)
+   - **Start Command:** `npm run serve` (or leave empty if `nixpacks.toml` is detected)
+   
+   **Note:** If Railway doesn't detect `nixpacks.toml`, explicitly set the build and start commands above.
 
 4. **Add Environment Variables:**
    ```
@@ -189,6 +191,26 @@ cmd = "npx serve -s build -l $PORT"
 - **API Server:** Check `server/nixpacks.toml` is correct
 - **Frontend:** Check root `nixpacks.toml` is correct
 - **Both:** Check logs in Railway dashboard
+
+### Frontend Build/Start Commands Not Working
+- **Issue:** Railway not detecting `nixpacks.toml` or commands not executing
+- **Solution:**
+  1. **Explicitly set in Railway Dashboard:**
+     - Go to Frontend Service → **Settings** → **Build**
+     - Set **Build Command:** `CI=false npm run build`
+     - Set **Start Command:** `npm run serve`
+  2. **Verify `nixpacks.toml` is in root:**
+     - File should be at: `/nixpacks.toml` (root of repository)
+     - Not in a subdirectory
+  3. **Check `package.json` has serve script:**
+     ```json
+     "scripts": {
+       "serve": "serve -s build -l $PORT"
+     }
+     ```
+  4. **Verify `serve` is installed:**
+     - Check `devDependencies` includes `"serve": "^14.2.0"`
+     - Or install globally in build phase
 
 ### Environment Variables Not Working
 - **Frontend:** `REACT_APP_*` variables must be set BEFORE build
