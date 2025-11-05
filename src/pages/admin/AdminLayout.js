@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { FaSignOutAlt, FaTachometerAlt, FaBox, FaShoppingBag, FaUsers, FaCreditCard, FaTags, FaBars, FaTimes } from 'react-icons/fa';
 import { logoutAdmin, setCurrentAdmin, selectCurrentAdmin } from '../../features/admin/adminSlice';
+import Navbar from '../../components/Navbar';
 
 const AdminContainer = styled.div`
   display: flex;
@@ -14,8 +15,8 @@ const AdminContainer = styled.div`
 
 const Sidebar = styled.div`
   width: 280px;
-  background: #1e293b;
-  color: #f8fafc;
+  background: #8B4513; /* match user navbar brown */
+  color: #FFF8DC; /* cream */
   padding: 1.5rem 0;
   position: fixed;
   height: 100%;
@@ -31,11 +32,11 @@ const Sidebar = styled.div`
 
 const SidebarHeader = styled.div`
   padding: 0 1.5rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   margin-bottom: 1.5rem;
   
   h2 {
-    color: #fff;
+    color: #FFF8DC;
     font-size: 1.25rem;
     margin: 0;
     display: flex;
@@ -44,7 +45,7 @@ const SidebarHeader = styled.div`
   }
   
   span {
-    color: #f39c12;
+    color: #FFD700; /* gold accent */
   }
 `;
 
@@ -52,7 +53,7 @@ const MenuItem = styled(Link)`
   display: flex;
   align-items: center;
   padding: 0.875rem 1.75rem;
-  color: #cbd5e1;
+  color: #FDEFD0; /* lighter cream */
   text-decoration: none;
   transition: all 0.2s ease;
   font-size: 0.9375rem;
@@ -61,14 +62,14 @@ const MenuItem = styled(Link)`
   border-radius: 8px;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
     transform: translateX(4px);
   }
   
   &.active {
-    background: rgba(99, 102, 241, 0.15);
-    color: #6366f1;
+    background: rgba(255, 215, 0, 0.18); /* gold tint */
+    color: #FFD700;
     font-weight: 600;
   }
   
@@ -87,14 +88,14 @@ const LogoutButton = styled.button`
   padding: 0.75rem 1.5rem;
   background: none;
   border: none;
-  color: #ecf0f1;
+  color: #FFF8DC;
   text-align: left;
   cursor: pointer;
   transition: all 0.3s;
   font-size: 0.95rem;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
     color: #e74c3c;
   }
   
@@ -107,7 +108,7 @@ const LogoutButton = styled.button`
 const MainContent = styled.main`
   flex: 1;
   margin-left: 280px;
-  padding: 2rem 2.5rem;
+  padding: 2rem 5%; /* match user content padding */
   transition: all 0.3s ease;
   min-height: 100vh;
   background-color: #f8fafc;
@@ -121,6 +122,12 @@ const MainContent = styled.main`
   @media (max-width: 640px) {
     padding: 1.25rem;
   }
+`;
+
+const ContentContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 `;
 
 const TopBar = styled.div`
@@ -287,60 +294,65 @@ const AdminLayout = () => {
   };
 
   return (
-    <AdminContainer>
-      <Sidebar isOpen={isSidebarOpen}>
-        <SidebarHeader>
-          <h2>Kimkles <span>Admin</span></h2>
-        </SidebarHeader>
+    <>
+      <Navbar />
+      <AdminContainer>
+        <Sidebar isOpen={isSidebarOpen}>
+          <SidebarHeader>
+            <h2>Kimkles <span>Admin</span></h2>
+          </SidebarHeader>
+          
+          <nav>
+            <MenuItem to="/admin/dashboard" className={isActive('/admin/dashboard')}>
+              <FaTachometerAlt /> Dashboard
+            </MenuItem>
+            
+            <MenuItem to="/admin/products" className={location.pathname.startsWith('/admin/products') ? 'active' : ''}>
+              <FaBox /> Products
+            </MenuItem>
+            
+            <MenuItem to="/admin/orders" className={location.pathname.startsWith('/admin/orders') ? 'active' : ''}>
+              <FaShoppingBag /> Orders
+            </MenuItem>
+            
+            <MenuItem to="/admin/users" className={location.pathname.startsWith('/admin/users') ? 'active' : ''}>
+              <FaUsers /> Users
+            </MenuItem>
+            
+            {/* <MenuItem to="/admin/payments" className={location.pathname.startsWith('/admin/payments') ? 'active' : ''}>
+              <FaCreditCard /> Payments
+            </MenuItem>
+            
+            <MenuItem to="/admin/promotions" className={location.pathname.startsWith('/admin/promotions') ? 'active' : ''}>
+              <FaTags /> Promotions
+            </MenuItem> */}
+            
+            <LogoutButton onClick={handleLogout}>
+              <FaSignOutAlt /> Logout
+            </LogoutButton>
+          </nav>
+        </Sidebar>
         
-        <nav>
-          <MenuItem to="/admin/dashboard" className={isActive('/admin/dashboard')}>
-            <FaTachometerAlt /> Dashboard
-          </MenuItem>
-          
-          <MenuItem to="/admin/products" className={location.pathname.startsWith('/admin/products') ? 'active' : ''}>
-            <FaBox /> Products
-          </MenuItem>
-          
-          <MenuItem to="/admin/orders" className={location.pathname.startsWith('/admin/orders') ? 'active' : ''}>
-            <FaShoppingBag /> Orders
-          </MenuItem>
-          
-          <MenuItem to="/admin/users" className={location.pathname.startsWith('/admin/users') ? 'active' : ''}>
-            <FaUsers /> Users
-          </MenuItem>
-          
-          <MenuItem to="/admin/payments" className={location.pathname.startsWith('/admin/payments') ? 'active' : ''}>
-            <FaCreditCard /> Payments
-          </MenuItem>
-          
-          <MenuItem to="/admin/promotions" className={location.pathname.startsWith('/admin/promotions') ? 'active' : ''}>
-            <FaTags /> Promotions
-          </MenuItem>
-          
-          <LogoutButton onClick={handleLogout}>
-            <FaSignOutAlt /> Logout
-          </LogoutButton>
-        </nav>
-      </Sidebar>
-      
-      <MainContent>
-        <TopBar>
-          <ToggleSidebar onClick={toggleSidebar}>
-            {isSidebarOpen ? <FaTimes /> : <FaBars />}
-          </ToggleSidebar>
-          
-          <UserMenu>
-            <span>{adminUser.name}</span>
-            <img src={adminUser.avatar} alt={adminUser.name} />
-          </UserMenu>
-        </TopBar>
-        
-        <div className="content">
-          <Outlet />
-        </div>
-      </MainContent>
-    </AdminContainer>
+        <MainContent>
+          <ContentContainer>
+            <TopBar>
+              <ToggleSidebar onClick={toggleSidebar}>
+                {isSidebarOpen ? <FaTimes /> : <FaBars />}
+              </ToggleSidebar>
+              
+              <UserMenu>
+                <span>{adminUser.name}</span>
+                <img src={adminUser.avatar} alt={adminUser.name} />
+              </UserMenu>
+            </TopBar>
+            
+            <div className="content">
+              <Outlet />
+            </div>
+          </ContentContainer>
+        </MainContent>
+      </AdminContainer>
+    </>
   );
 };
 
